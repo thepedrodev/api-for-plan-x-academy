@@ -29,18 +29,36 @@ enum TrainingMethod {
   high
 }
 
+enum Field {
+  sex
+  height
+  weight
+  biotype
+  deficiencyOrLimitation
+  objective
+  timeExpectedForResult
+  muscleFocus
+  alreadyTrained
+  experienceLevel
+  daysPerWeek
+  avaliableTimePerWorkout
+  trainingSchedule
+}
+
 model User {
-  id           String          @id @default(uuid())
-  email        String          @unique
-  role         Role            @default(customer)
-  password     String
-  name         String
-  goal         GoalType        @default(gain)
-  experience   ExperienceLevel @default(beginner)
-  trainings    Training[]
-  progress     HistoryProgress[]
+  id            String            @id @default(uuid())
+  email         String            @unique
+  role          Role              @default(customer)
+  password      String
+  name          String
+  goal          GoalType          @default(gain)
+  experience    ExperienceLevel   @default(beginner)
+  
+  trainings     Training[]
+  progress      HistoryProgress[]
   quizResponses QuizResponse[]
-  createdAt    DateTime        @default(now())
+  
+  createdAt     DateTime          @default(now())
 
   @@map("user")
 }
@@ -51,9 +69,26 @@ model Training {
   type      TrainingMethod
   routine   Json
   createdAt DateTime       @default(now()) @map("created_at")
+  
   user      User           @relation(fields: [userId], references: [id])
+  workouts  Workout[]      // relação 1:N com Workout
 
   @@map("training")
+}
+
+model Workout {
+  id          String    @id @default(uuid())
+  trainingId  String    @map("training_id")
+  name        String
+  sets        Int
+  reps        Int?
+  duration    Int?
+  rest        Int?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  
+  training    Training  @relation(fields: [trainingId], references: [id])
+
+  @@map("workout")
 }
 
 model HistoryProgress {
@@ -62,52 +97,55 @@ model HistoryProgress {
   weight    Float
   note      String?
   createdAt DateTime @default(now()) @map("created_at")
+  
   user      User     @relation(fields: [userId], references: [id])
 
   @@map("history_progress")
 }
 
 model Quiz {
-  id           String         @id @default(uuid())
-  title        String
-  questions    QuizQuestion[]
+  id            String         @id @default(uuid())
+  title         String
+  questions     QuizQuestion[]
   quizResponses QuizResponse[]
 
   @@map("quiz")
 }
 
 model QuizQuestion {
-  id         String       @id @default(uuid())
-  quizId     String       @map("quiz_id")
-  text       String
-  options    Json?        // Exemplo: ["Sim", "Não", "Às vezes"]
-  quiz       Quiz         @relation(fields: [quizId], references: [id])
+  id          String       @id @default(uuid())
+  quizId      String       @map("quiz_id")
+  text        String
+  options     Json?
+  field       Field
+  
+  quiz        Quiz         @relation(fields: [quizId], references: [id])
   quizAnswers QuizAnswer[]
 
   @@map("quiz_question")
 }
 
 model QuizResponse {
-  id        String       @id @default(uuid())
-  quizId    String       @map("quiz_id")
-  userId    String?      @map("user_id")
-  createdAt DateTime     @default(now()) @map("created_at")
+  id        String   @id @default(uuid())
+  quizId    String   @map("quiz_id")
+  userId    String?  @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
 
-  quiz      Quiz         @relation(fields: [quizId], references: [id])
-  user      User?        @relation(fields: [userId], references: [id])
-  answers   QuizAnswer[]
+  quiz    Quiz         @relation(fields: [quizId], references: [id])
+  user    User?        @relation(fields: [userId], references: [id])
+  answers QuizAnswer[]
 
   @@map("quiz_response")
 }
 
 model QuizAnswer {
-  id             String       @id @default(uuid())
-  quizResponseId String       @map("quiz_response_id")
-  questionId     String       @map("question_id")
+  id             String @id @default(uuid())
+  quizResponseId String @map("quiz_response_id")
+  questionId     String @map("question_id")
   answer         String
 
-  quizResponse   QuizResponse @relation(fields: [quizResponseId], references: [id])
-  question       QuizQuestion @relation(fields: [questionId], references: [id])
+  quizResponse QuizResponse @relation(fields: [quizResponseId], references: [id])
+  question     QuizQuestion @relation(fields: [questionId], references: [id])
 
   @@map("quiz_answer")
 }

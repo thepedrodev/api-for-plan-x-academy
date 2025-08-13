@@ -10,9 +10,10 @@ class QuizzesQuestionsController {
         quiz_id: z.string().uuid(),
         options: z.record(z.any()),
         text: z.string().min(10),
+        field: z.enum(["sex", "height", "weight", "biotype", "deficiencyOrLimitation", "objective", "timeExpectedForResult", "muscleFocus", "alreadyTrained", "experienceLevel", "daysPerWeek", "avaliableTimePerWorkout", "trainingSchedule"])
       })
 
-      const { text, options, quiz_id,  } = bodySchema.parse(request.body)
+      const { text, options, quiz_id, field } = bodySchema.parse(request.body)
 
       const quiz = await prisma.quiz.findFirst({
         where: { id: quiz_id }
@@ -26,7 +27,8 @@ class QuizzesQuestionsController {
         data: {
           quizId: quiz_id,
           text,
-          options
+          options,
+          field
         }
       })
 
@@ -45,7 +47,7 @@ class QuizzesQuestionsController {
 
     const quiz = await prisma.quiz.findFirst({
       where: { id },
-      include: { questions: { select: { text: true, options: true } } }
+      include: { questions: { select: { text: true, options: true, field: true } } }
     })
 
     if (!quiz) {
