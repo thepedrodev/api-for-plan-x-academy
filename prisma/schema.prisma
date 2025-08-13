@@ -85,7 +85,6 @@ model Workout {
   duration    Int?
   rest        Int?
   createdAt   DateTime  @default(now()) @map("created_at")
-  
   training    Training  @relation(fields: [trainingId], references: [id])
 
   @@map("workout")
