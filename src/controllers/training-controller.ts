@@ -9,7 +9,20 @@ class TrainingController {
       const bodySchema = z.object({
         user_id: z.string().uuid(),
         training_type: z.enum(["low", "high"]),
-        routine: z.record(z.any())
+        routine: z.array(
+          z.object({
+            day: z.string(),
+            exercises: z.array(
+              z.object({
+                name: z.string(),
+                sets: z.number().int(),
+                reps: z.number().int().optional(),
+                load: z.number().optional(),
+                rest: z.string().optional()
+              })
+            )
+          })
+        )
       })
 
       const { user_id, training_type, routine } = bodySchema.parse(request.body)
