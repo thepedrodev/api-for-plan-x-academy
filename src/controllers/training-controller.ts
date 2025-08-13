@@ -7,6 +7,8 @@ class TrainingController {
   async create(request: Request, response: Response, next: NextFunction) {
     try {
       const bodySchema = z.object({
+        title: z.string().optional(),
+        description: z.string().optional(),
         user_id: z.string().uuid(),
         training_type: z.enum(["low", "high"]),
         routine: z.array(
@@ -25,7 +27,7 @@ class TrainingController {
         )
       })
 
-      const { user_id, training_type, routine } = bodySchema.parse(request.body)
+      const { user_id, training_type, routine,title, description } = bodySchema.parse(request.body)
 
       const user = await prisma.user.findFirst({
         where: { id: user_id }
@@ -39,7 +41,9 @@ class TrainingController {
         data: {
           userId: user.id,
           routine,
-          type: training_type
+          type: training_type,
+          title,
+          description
         }
       })
 
@@ -56,23 +60,16 @@ class TrainingController {
 
     const { id } = paramsSchema.parse(request.params)
 
-    const user = prisma.user.findFirst({
-      where: {id}
+    const training = await prisma.training.findFirst({
+      where: {id},
+      select:{title:true, description:true, type:true, routine:true, createdAt:true}
     })
 
-    if(!user){
+    if(!training){
       throw new AppError("This user dont exist!")
     }
 
-
-    const userTraining = await prisma.training.findFirst({
-      where:{
-        userId: id
-      },
-      select: {type:true, routine:true}
-    })
-
-    return response.json(userTraining)
+    return response.json(training)
   }
 }
 

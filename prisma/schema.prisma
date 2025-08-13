@@ -67,9 +67,7 @@ model Training {
   id          String         @id @default(uuid())
   userId      String         @map("user_id")
   type        TrainingMethod
-  title       String? //Alterar para obrigatorio depois
-  description String? //Alterar para obrigatorio depois
-  routine     Json
+  training     Json
   createdAt   DateTime       @default(now()) @map("created_at")
 
   user User @relation(fields: [userId], references: [id])
