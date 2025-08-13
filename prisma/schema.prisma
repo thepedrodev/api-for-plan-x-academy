@@ -71,23 +71,8 @@ model Training {
   createdAt DateTime       @default(now()) @map("created_at")
   
   user      User           @relation(fields: [userId], references: [id])
-  workouts  Workout[]      // relação 1:N com Workout
 
   @@map("training")
-}
-
-model Workout {
-  id          String    @id @default(uuid())
-  trainingId  String    @map("training_id")
-  name        String
-  sets        Int
-  reps        Int?
-  duration    Int?
-  rest        Int?
-  createdAt   DateTime  @default(now()) @map("created_at")
-  training    Training  @relation(fields: [trainingId], references: [id])
-
-  @@map("workout")
 }
 
 model HistoryProgress {

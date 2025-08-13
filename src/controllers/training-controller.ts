@@ -18,7 +18,7 @@ class TrainingController {
                 sets: z.number().int(),
                 reps: z.number().int().optional(),
                 load: z.number().optional(),
-                rest: z.string().optional()
+                rest: z.number().optional()
               })
             )
           })
