@@ -11,7 +11,7 @@ class TrainingController {
         description: z.string().optional(),
         user_id: z.string().uuid(),
         training_type: z.enum(["low", "high"]),
-        routine: z.array(
+        workouts: z.array(
           z.object({
             day: z.string(),
             exercises: z.array(
@@ -27,7 +27,7 @@ class TrainingController {
         )
       })
 
-      const { user_id, training_type, routine,title, description } = bodySchema.parse(request.body)
+      const { user_id, training_type, workouts, description,title } = bodySchema.parse(request.body)
 
       const user = await prisma.user.findFirst({
         where: { id: user_id }
@@ -40,7 +40,7 @@ class TrainingController {
       const training = await prisma.training.create({
         data: {
           userId: user.id,
-          routine,
+          workouts,
           type: training_type,
           title,
           description
