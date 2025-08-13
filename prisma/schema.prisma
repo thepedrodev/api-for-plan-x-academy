@@ -46,31 +46,33 @@ enum Field {
 }
 
 model User {
-  id            String            @id @default(uuid())
-  email         String            @unique
-  role          Role              @default(customer)
-  password      String
-  name          String
-  goal          GoalType          @default(gain)
-  experience    ExperienceLevel   @default(beginner)
-  
+  id         String          @id @default(uuid())
+  email      String          @unique
+  role       Role            @default(customer)
+  password   String
+  name       String
+  goal       GoalType        @default(gain)
+  experience ExperienceLevel @default(beginner)
+
   trainings     Training[]
   progress      HistoryProgress[]
   quizResponses QuizResponse[]
-  
-  createdAt     DateTime          @default(now())
+
+  createdAt DateTime @default(now())
 
   @@map("user")
 }
 
 model Training {
-  id        String         @id @default(uuid())
-  userId    String         @map("user_id")
-  type      TrainingMethod
-  routine   Json
-  createdAt DateTime       @default(now()) @map("created_at")
-  
-  user      User           @relation(fields: [userId], references: [id])
+  id          String         @id @default(uuid())
+  userId      String         @map("user_id")
+  type        TrainingMethod
+  title       String? //Alterar para obrigatorio depois
+  description String? //Alterar para obrigatorio depois
+  routine     Json
+  createdAt   DateTime       @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
 
   @@map("training")
 }
@@ -81,8 +83,8 @@ model HistoryProgress {
   weight    Float
   note      String?
   createdAt DateTime @default(now()) @map("created_at")
-  
-  user      User     @relation(fields: [userId], references: [id])
+
+  user User @relation(fields: [userId], references: [id])
 
   @@map("history_progress")
 }
@@ -97,12 +99,12 @@ model Quiz {
 }
 
 model QuizQuestion {
-  id          String       @id @default(uuid())
-  quizId      String       @map("quiz_id")
-  text        String
-  options     Json?
-  field       Field
-  
+  id      String @id @default(uuid())
+  quizId  String @map("quiz_id")
+  text    String
+  options Json?
+  field   Field
+
   quiz        Quiz         @relation(fields: [quizId], references: [id])
   quizAnswers QuizAnswer[]
 
