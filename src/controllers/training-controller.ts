@@ -1,17 +1,17 @@
 import { Request, Response, NextFunction } from "express"
 import { prisma } from "@/database/prisma"
-import { z } from "zod"
+import { string, z } from "zod"
 import { AppError } from "@/utils/app-error"
 
 class TrainingController {
   async create(request: Request, response: Response, next: NextFunction) {
     try {
       const bodySchema = z.object({
-        title: z.string().optional(),
-        description: z.string().optional(),
+        title: z.string(),
+        description: z.string(),
         user_id: z.string().uuid(),
         training_type: z.enum(["low", "high"]),
-        workouts: z.array(
+        routine: z.array(
           z.object({
             day: z.string(),
             exercises: z.array(
@@ -27,7 +27,7 @@ class TrainingController {
         )
       })
 
-      const { user_id, training_type, workouts, description,title } = bodySchema.parse(request.body)
+      const { user_id, training_type, routine, description, title } = bodySchema.parse(request.body)
 
       const user = await prisma.user.findFirst({
         where: { id: user_id }
@@ -40,7 +40,7 @@ class TrainingController {
       const training = await prisma.training.create({
         data: {
           userId: user.id,
-          workouts,
+          routine,
           type: training_type,
           title,
           description
@@ -54,22 +54,31 @@ class TrainingController {
   }
 
   async show(request: Request, response: Response, next: NextFunction) {
-    const paramsSchema = z.object({
-      id: z.string().uuid()
-    })
+    try {
+      const paramsSchema = z.object({
+        id: z.string().uuid()
+      })
 
-    const { id } = paramsSchema.parse(request.params)
+      const { id } = paramsSchema.parse(request.params)
 
-    const training = await prisma.training.findFirst({
-      where: {id},
-      select:{title:true, description:true, type:true, routine:true, createdAt:true}
-    })
+      const user = await prisma.user.findFirst({
+        where: { id }
+      })
 
-    if(!training){
-      throw new AppError("This user dont exist!")
+      if (!user) {
+        throw new AppError("This user dont exist!")
+      }
+
+      const training = await prisma.training.findMany({
+        where: {userId: id},
+        select: {title: true, description: true, routine: true, type:true}
+      })
+
+      return response.json(training)
+    } catch (error) {
+
     }
 
-    return response.json(training)
   }
 }
 
