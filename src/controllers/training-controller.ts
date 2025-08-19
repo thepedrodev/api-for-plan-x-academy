@@ -18,7 +18,7 @@ class TrainingController {
               z.object({
                 name: z.string(),
                 sets: z.number().int(),
-                reps: z.number().int().optional(),
+                reps: z.string().optional(),
                 load: z.number().optional(),
                 rest: z.number().optional()
               })
