@@ -50,23 +50,30 @@ export class TrainingHistoryController {
       const { user_id } = paramsSchema.parse(request.params)
 
       const user = await prisma.user.findFirst({
-        where:{id:user_id}
+        where: { id: user_id }
       })
 
-      if(!user){
+      if (!user) {
         throw new AppError("This user dont exist!")
       }
 
       const trainingHistory = await prisma.trainingHistory.findMany({
-        where:{
+        where: {
           userId: user_id
         },
-        include:{
-          
+        include: {
+          training: {
+            select: {
+              title: true,
+              id: true,
+              description: true
+            }
+          }
+
         }
       })
 
-      if(trainingHistory.length === 0){
+      if (trainingHistory.length === 0) {
         throw new AppError("This user has not recorded any history")
       }
 
