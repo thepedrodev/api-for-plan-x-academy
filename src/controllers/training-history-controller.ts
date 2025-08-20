@@ -22,7 +22,7 @@ export class TrainingHistoryController {
       }
 
       const training = await prisma.training.findFirst({
-        where: { id: training_id, userId:user_id }
+        where: { id: training_id, userId: user_id }
       })
 
       if (!training) {
@@ -31,8 +31,44 @@ export class TrainingHistoryController {
 
 
       const trainingHistory = await prisma.trainingHistory.create({
-        data:{userId: user_id, trainingId: training_id}
+        data: { userId: user_id, trainingId: training_id }
       })
+
+      return response.json(trainingHistory)
+    } catch (error) {
+      next(error)
+    }
+
+  }
+
+  async show(request: Request, response: Response, next: NextFunction) {
+    try {
+      const paramsSchema = z.object({
+        user_id: z.string().uuid()
+      })
+
+      const { user_id } = paramsSchema.parse(request.params)
+
+      const user = await prisma.user.findFirst({
+        where:{id:user_id}
+      })
+
+      if(!user){
+        throw new AppError("This user dont exist!")
+      }
+
+      const trainingHistory = await prisma.trainingHistory.findMany({
+        where:{
+          userId: user_id
+        },
+        include:{
+          
+        }
+      })
+
+      if(trainingHistory.length === 0){
+        throw new AppError("This user has not recorded any history")
+      }
 
       return response.json(trainingHistory)
     } catch (error) {

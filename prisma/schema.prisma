@@ -76,6 +76,7 @@ model Training {
 
   user      User       @relation(fields: [userId], references: [id])
   exercises Exercise[] // Opcional: associar exercícios ao treino
+  trainingHistory TrainingHistory[]
 
   @@map("training")
 }
@@ -87,6 +88,7 @@ model TrainingHistory{
   performadAt DateTime @map("performad_at") @default(now())
 
   user User @relation(fields: [userId], references: [id])
+  training Training @relation(fields: [trainingId], references: [id])
 }
 
 model Exercise {
