@@ -22,12 +22,13 @@ export class TrainingHistoryController {
       }
 
       const training = await prisma.training.findFirst({
-        where: { id: training_id }
+        where: { id: training_id, userId:user_id }
       })
 
       if (!training) {
         throw new AppError("This training dont exist!")
       }
+
 
       const trainingHistory = await prisma.trainingHistory.create({
         data:{userId: user_id, trainingId: training_id}
