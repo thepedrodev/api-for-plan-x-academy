@@ -58,6 +58,7 @@ model User {
   progress      HistoryProgress[]
   quizResponses QuizResponse[]
   exercises     Exercise[] // Relação com exercícios criados
+  trainingHistory TrainingHistory[]
 
   createdAt DateTime @default(now())
 
@@ -77,6 +78,15 @@ model Training {
   exercises Exercise[] // Opcional: associar exercícios ao treino
 
   @@map("training")
+}
+
+model TrainingHistory{
+  id String @id @default(uuid())
+  userId String @map("user_id")
+  trainingId String @map("training_id")
+  performadAt DateTime @map("performad_at") @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Exercise {
