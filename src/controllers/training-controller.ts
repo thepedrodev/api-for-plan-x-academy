@@ -71,7 +71,7 @@ class TrainingController {
 
       const training = await prisma.training.findMany({
         where: {userId: id},
-        select: {title: true, description: true, routine: true, type:true}
+        select: {title: true, description: true, routine: true, type:true, id:true}
       })
 
       return response.json(training)

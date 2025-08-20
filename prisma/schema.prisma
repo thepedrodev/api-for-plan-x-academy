@@ -64,7 +64,7 @@ model User {
   @@map("user")
 }
 
-model Training {
+model Training { 
   id          String         @id @default(uuid())
   userId      String         @map("user_id")
   type        TrainingMethod

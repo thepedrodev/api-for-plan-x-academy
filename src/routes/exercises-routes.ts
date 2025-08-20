@@ -8,5 +8,6 @@ const exercisesController = new ExercisesController()
 exercisesRoutes.use(ensureAuthenticated)
 
 exercisesRoutes.post("/", exercisesController.create)
+exercisesRoutes.get("/:id", exercisesController.show)
 
 export { exercisesRoutes }

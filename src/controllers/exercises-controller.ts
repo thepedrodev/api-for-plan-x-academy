@@ -37,4 +37,25 @@ export class ExercisesController {
       next(error)
     }
   }
+
+  async show(request: Request, response: Response, next: NextFunction) {
+    try {
+      const paramsSchema = z.object({
+        id: z.string().uuid()
+      })
+
+      const { id } = paramsSchema.parse(request.params)
+
+      const exercises = await prisma.exercise.findMany({
+        where: {
+          createdById: id
+        }
+      })
+
+      return response.json(exercises)
+    } catch (error) {
+      next(error)
+    } 
+
+  }
 }
