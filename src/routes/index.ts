@@ -5,6 +5,7 @@ import { trainingRoutes } from "./training-routes"
 import { quizzesRoutes } from "./quizzes-routes"
 import { historyProgressRoutes } from "./history-routes"
 import { exercisesRoutes } from "./exercises-routes"
+import { trainingHistoryRoutes } from "./training-history-routes"
 
 const routes = Router()
 
@@ -14,5 +15,6 @@ routes.use("/training", trainingRoutes)
 routes.use("/quiz", quizzesRoutes)
 routes.use("/progress", historyProgressRoutes)
 routes.use("/exercises", exercisesRoutes)
+routes.use("/training-history", trainingHistoryRoutes)
 
 export { routes }
