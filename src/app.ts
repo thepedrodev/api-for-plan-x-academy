@@ -7,7 +7,9 @@ const app = express()
 
 app.use(cors({ origin: [
   "https://plan-x-academy-by-pedro-davi.vercel.app",
-  "https://plan-x-academy.onrender.com"] }))
+  "https://plan-x-academy.onrender.com",
+  "http://localhost:5173"
+] }))
 app.use(express.json())
 app.use(routes)
 
