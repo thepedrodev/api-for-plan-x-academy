@@ -28,6 +28,11 @@ class QuizzesResponseController {
         data: { userId: user_id, quizId: quiz_id }
       })
 
+      await prisma.user.update({
+        where:{id:user_id},
+        data:{role: "activeCustomer"}
+      })
+
       return response.json(responseUser)
     } catch (error) {
       next(error)

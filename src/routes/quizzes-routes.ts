@@ -17,10 +17,13 @@ quizzesRoutes.post("/questions/answers", quizzersAnswersController.create)
 quizzesRoutes.use(ensureAuthenticated)
 quizzesRoutes.get("/questions/:id", quizzesQuestionsController.show)
 
+
+quizzesRoutes.post("/questions/response", quizzesResponseController.create)
+
 quizzesRoutes.use(verifyUserAuthorization(["admin"]))
 
 quizzesRoutes.post("/", quizzesController.create)
 quizzesRoutes.post("/questions", quizzesQuestionsController.create)
 
-quizzesRoutes.post("/questions/response", quizzesResponseController.create)
+
 export { quizzesRoutes }

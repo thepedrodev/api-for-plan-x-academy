@@ -66,7 +66,8 @@ export class TrainingHistoryController {
             select: {
               title: true,
               id: true,
-              description: true
+              description: true,
+              routine: true,
             }
           }
 

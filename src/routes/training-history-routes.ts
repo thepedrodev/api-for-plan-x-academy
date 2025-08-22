@@ -8,3 +8,4 @@ const trainingHistoryController = new TrainingHistoryController()
 trainingHistoryRoutes.use(ensureAuthenticated)
 
 trainingHistoryRoutes.post("/", trainingHistoryController.create)
+trainingHistoryRoutes.get("/:user_id", trainingHistoryController.show)
