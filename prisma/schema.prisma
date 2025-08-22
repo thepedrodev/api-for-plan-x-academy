@@ -58,7 +58,7 @@ model User {
   trainings     Training[]
   progress      HistoryProgress[]
   quizResponses QuizResponse[]
-  exercises     Exercise[] // Relação com exercícios criados
+  exercises     Exercise[] 
   trainingHistory TrainingHistory[]
 
   createdAt DateTime @default(now())
