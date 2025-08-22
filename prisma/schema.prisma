@@ -76,7 +76,7 @@ model Training {
   createdAt   DateTime       @default(now()) @map("created_at")
 
   user      User       @relation(fields: [userId], references: [id])
-  exercises Exercise[] // Opcional: associar exercícios ao treino
+  exercises Exercise[] 
   trainingHistory TrainingHistory[]
 
   @@map("training")
@@ -106,7 +106,7 @@ model Exercise {
   createdById String? @map("created_by_id")
   createdBy   User?   @relation(fields: [createdById], references: [id])
 
-  trainings Training[] // relação opcional, caso queira associar exercícios a treinos
+  trainings Training[] 
 
   @@map("exercise")
 }
