@@ -5,7 +5,7 @@ import cors from "cors"
 
 const app = express()
 
-app.use(cors({ origin: "http://localhost:5173" }))
+app.use(cors({ origin: "https://plan-x-academy-by-pedro-davi.vercel.app" }))
 app.use(express.json())
 app.use(routes)
 
