@@ -55,18 +55,31 @@ model User {
   goal       GoalType        @default(gain)
   experience ExperienceLevel @default(beginner)
 
-  trainings     Training[]
-  progress      HistoryProgress[]
-  quizResponses QuizResponse[]
-  exercises     Exercise[] 
+  trainings       Training[]
+  progress        HistoryProgress[]
+  quizResponses   QuizResponse[]
+  exercises       Exercise[]
   trainingHistory TrainingHistory[]
+  userActivities  UserActivities[]
+
+  streakCount      Int       @default(0) @map("streak_count")
+  maxStreak        Int       @default(0) @map("max_streak")
+  lastActivityDate DateTime? @map("last_activity_date")
 
   createdAt DateTime @default(now())
 
   @@map("user")
 }
 
-model Training { 
+model UserActivities {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  activityDate DateTime @default(now()) @map("activity_date")
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Training {
   id          String         @id @default(uuid())
   userId      String         @map("user_id")
   type        TrainingMethod
@@ -75,25 +88,25 @@ model Training {
   routine     Json
   createdAt   DateTime       @default(now()) @map("created_at")
 
-  user      User       @relation(fields: [userId], references: [id])
-  exercises Exercise[] 
+  user            User              @relation(fields: [userId], references: [id])
+  exercises       Exercise[]
   trainingHistory TrainingHistory[]
 
   @@map("training")
 }
 
-model TrainingHistory{
-  id String @id @default(uuid())
-  userId String @map("user_id")
-  trainingId String @map("training_id")
-  performadAt DateTime @map("performad_at") @default(now())
+model TrainingHistory {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  trainingId  String   @map("training_id")
+  performadAt DateTime @default(now()) @map("performad_at")
 
-  user User @relation(fields: [userId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
   training Training @relation(fields: [trainingId], references: [id])
 }
 
 model Exercise {
-  id            String          @id @default(uuid())
+  id            String   @id @default(uuid())
   name          String
   category      String
   mainMuscle    String
@@ -101,12 +114,12 @@ model Exercise {
   equipment     String?
   description   String?
   executionTips String?
-  createdAt     DateTime        @default(now())
+  createdAt     DateTime @default(now())
 
   createdById String? @map("created_by_id")
   createdBy   User?   @relation(fields: [createdById], references: [id])
 
-  trainings Training[] 
+  trainings Training[]
 
   @@map("exercise")
 }
